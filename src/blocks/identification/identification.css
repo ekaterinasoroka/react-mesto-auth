@@ -1,0 +1,6 @@
+.identification {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgba(0,0,0,0.5);
+}
