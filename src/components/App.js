@@ -42,20 +42,16 @@ function App() {
 
 
   const tokenCheck = () => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem("jwt");
     if (!jwt) {
       return;
     }
     auth.getContent(jwt)
-    .then(({ email}) => {
+    .then(({email}) => {
       setUserInfo({email});
       setLoggedIn(true);
     });  
   }
-
-
-
-
 
   useEffect(() => {
     tokenCheck();
@@ -67,27 +63,30 @@ function App() {
     }
   }, [loggedIn, history]);
 
+  function onLogout() {
+    setLoggedIn(false);
+    localStorage.removeItem('jwt');
+    history.push('/signin');
+  };
+
   function onRegister(data) {
     return auth.register(data)
     .then(() => {
-      history.pushState('/sign-in')
+      history.push('/signin')
+      
     })
   }
 
   function onLogin(data) {
     return auth.authorize(data)
-    .then(({jwt, user: {email}}) => {
-      setUserInfo({ email});
+    .then(({jwt, email}) => {
+      setUserInfo({email})
       setLoggedIn(true);
       localStorage.setItem('jwt', jwt);
-    })
-  }
+    });
+  };
 
-  function onLogout() {
-    setLoggedIn(false);
-    localStorage.removeItem('jwt');
-    history.push('/sign-in')
-  }
+
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -169,9 +168,41 @@ function App() {
   return (
     
     <div className="page">
-            <Switch>
+
+      <CurrentUserContext.Provider value={currentUser}>
+        <Header
+          userData={userInfo}
+        />
+
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen} 
+          onClose={closeAllPopups} 
+          onUpdateUser={handleUpdateUser}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen} 
+          onClose={closeAllPopups} 
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <PopupWithForm
+          name="delete-card" 
+          title="Вы уверены?"
+        />
+
+        <ImagePopup
+          card={selectedCard}
+          onClose={closeAllPopups}
+          name="full-size"
+        />
+      </CurrentUserContext.Provider> 
+      <Switch>
         <ProtectedRoute
-          path='/'
+          exact path='/'
           component={Main}
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
@@ -184,65 +215,26 @@ function App() {
           loggedIn={loggedIn}
           onLogout={onLogout}
         />
+        <ProtectedRoute
+          exact path='/'
+          component={Footer}
+          loggedIn={loggedIn}
+          onLogout={onLogout}
+        />
         <Route
-          path="/sign-up"
+          path="/signup"
         >
           <Register onRegister={onRegister}/>
         </Route>
         <Route
-          path="/sign-in"
+          path="/signin"
         >
           <Login onLogin={onLogin} />
         </Route>
         <Route>
-          {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+          {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
         </Route> 
       </Switch>
-      <CurrentUserContext.Provider value={currentUser}>
-        <Header
-            userData={userInfo}
-        />
-        <Footer
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen} 
-          onClose={closeAllPopups} 
-          onUpdateUser={handleUpdateUser}
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit}
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen} 
-          onClose={closeAllPopups} 
-          onUpdateAvatar={handleUpdateAvatar}
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-        <PopupWithForm
-          name="delete-card" 
-          title="Вы уверены?"
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-          name="full-size"
-          loggedIn={loggedIn}
-          onLogout={onLogout}
-        />
-      </CurrentUserContext.Provider> 
-
       
     </div>
      

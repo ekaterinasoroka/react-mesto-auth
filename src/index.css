@@ -5,6 +5,7 @@
 @import url(./blocks/page/page.css);
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__link/header__link.css);
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__add-button/profile__add-button.css);
 @import url(./blocks/profile/__avatar-container/profile__avatar-container.css);
@@ -65,4 +66,5 @@
 @import url(./blocks/identification/__sign/identification__sign.css);
 @import url(./blocks/identification/__subButton/identification__subButton.css);
 @import url(./blocks/identification/__welcome/identification__welcome.css);
+@import url(./blocks/identification/__input/identification__input.css);
 @import url(./blocks/form/__error/_visible/form__error_visible.css);

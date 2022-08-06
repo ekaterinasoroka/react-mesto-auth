@@ -2,10 +2,10 @@ import { useState } from  'react';
 
 import Header from './Header';
 
-function Login({ onLogin }) {
+function Login({ onLogin } ) {
   const [loginData, setLoginData] = useState( {
     email: '',
-    password: ''
+    password: '',
   });
 
   const [message, setMessage] = useState('');
@@ -23,35 +23,32 @@ function Login({ onLogin }) {
     if(!loginData.email || !loginData.password) {
       return;
     }
-  }
-
-  onLogin(loginData)
+    onLogin(loginData)
     .catch(err => setMessage(err.message || 'Ошибка'))
-
+  }
     return (
-      <div className="identification">
-            <Header />
-            <p className="identification__welcome">
-              Вход
-            </p>
-            <form onSubmit={handleSubmit} className="identification__form">
-              <input 
-                name="email" 
-                type="email" 
-                value={loginData.email} 
-                onChange={handleChange} 
-                placeholder="Email"
-              />          
-              <input 
-                name="password" 
-                type="password" 
-                value={loginData.password} 
-                onChange={handleChange} 
-                placeholder="Пароль"
-              />
-              <button type="submit" className="identification__subButton">Войти</button>
-            </form>
-          </div>
+      <div className="identification" onSubmit={handleSubmit}>
+        <p className="identification__welcome">
+          Вход
+        </p>
+        <form className="identification__form">
+          <input className="identification__input"
+            name="email" 
+            type="email" 
+            value={loginData.email} 
+            onChange={handleChange} 
+            placeholder="Email"
+          />          
+          <input className="identification__input"
+            name="password" 
+            type="password" 
+            value={loginData.password} 
+            onChange={handleChange} 
+            placeholder="Пароль"
+          />
+          <button type="submit" className="identification__subButton">Войти</button>
+        </form>
+      </div>
     )
 }
 

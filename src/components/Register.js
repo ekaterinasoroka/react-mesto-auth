@@ -1,6 +1,5 @@
 import { useState } from  'react';
 import { Link } from 'react-router-dom';
-import Header from './Header';
 
 function Register({onRegister}) {
 
@@ -21,26 +20,26 @@ const [message, setMessage] = useState('');
 
   function handleSubmit(e) {
     e.preventDefault();
-  }
+ 
 
   onRegister(registerData)
     .catch(err => setMessage(err.message || "Что-то пошло не так"))
+  }
 
   return(
     <div className="identification">
-        <Header />
         <p className="identification__welcome">
           Регистрация
         </p>
         <form onSubmit={handleSubmit} className="identification__form">
-          <input 
+          <input className="identification__input"
             name="email" 
             type="email" 
             value={registerData.email} 
             onChange={handleChange} 
             placeholder="Email"
           />          
-          <input 
+          <input className="identification__input"
             name="password" 
             type="password" 
             value={registerData.password} 
@@ -51,7 +50,7 @@ const [message, setMessage] = useState('');
         </form>
         <div className="identification__sign">
           <p>Уже зарегистрированы?</p>
-          <Link to="/sign-in" className="identification__login-link">Войти</Link>
+          <Link to="/signin" className="identification__login-link">Войти</Link>
         </div>
       </div>
   )
