@@ -1,0 +1,8 @@
+.header__info{
+  margin-top: 18px;
+  margin-bottom: 6px;
+  padding: 0;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
