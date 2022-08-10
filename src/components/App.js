@@ -24,7 +24,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null);
-  const [regMessage, setRegMessage] = useState(false);
+  const [isSuccessTooltipStatus, setIsSuccessTooltipStatus] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [emailInfo, setEmailInfo] = useState('');
@@ -83,16 +83,16 @@ function App() {
       .then(() => {
         if(data) {
           setIsInfoTooltipOpen(true);
-          setRegMessage(true);
+          setIsSuccessTooltipStatus(true);
           history.push('/signin');
         }
         else{
-          setRegMessage(true);
+          setIsSuccessTooltipStatus(true);
         }
       })
       .catch(() => {
         setIsInfoTooltipOpen(true);
-        setRegMessage(false);
+        setIsSuccessTooltipStatus(false);
       });
   }
 
@@ -106,12 +106,12 @@ function App() {
         }
         else {
           setIsInfoTooltipOpen(true);
-          setRegMessage(true);
+          setIsSuccessTooltipStatus(true);
         }
       })
       .catch(() => {
         setIsInfoTooltipOpen(true);
-        setRegMessage(false);
+        setIsSuccessTooltipStatus(false);
       });
   };
 
@@ -260,7 +260,7 @@ function App() {
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
-          auth={regMessage}
+          auth={isSuccessTooltipStatus}
           name='info'
         />
         <Footer />

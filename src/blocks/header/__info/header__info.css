@@ -6,3 +6,9 @@
   gap: 24px;
   align-items: center;
 }
+
+@media screen and (max-width: 900px) {
+  .header__info {
+    margin-right: 27px;
+  }
+}

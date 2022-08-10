@@ -7,5 +7,10 @@
   max-width: 358px;
   background-color: #000;
   margin: auto;
+}
 
+@media screen and (max-width: 550px) {
+  .identification__form {
+    padding: 25px 22px;
+  }
 }
