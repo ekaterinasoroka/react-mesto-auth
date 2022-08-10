@@ -25,37 +25,45 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null);
   const [regMessage, setRegMessage] = useState(false);
-
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-
   const [emailInfo, setEmailInfo] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    Promise.all([api.getCards(), api.getInfoUsers()])
+    if(loggedIn) {
+      Promise.all([api.getCards(), api.getInfoUsers()])
       .then(([card, userInfo]) => {
         setCards(card);
         setCurrentUser(userInfo)
       })
       .catch((err) => console.log(err));
-  }, []);
+    } 
+  }, [loggedIn]);
 
-  const tokenCheck = () => {
+  const checkToken = () => {
     const jwt = localStorage.getItem("jwt");
     if (!jwt) {
       return;
     }
     auth.getContent(jwt)
       .then((res) => {
-        setEmailInfo(res.data.email);
-        setLoggedIn(true);
-      });
+        if(res.data.email) {
+          setEmailInfo(res.data.email);
+          setLoggedIn(true);
+        }
+        else {
+          localStorage.removeItem('jwt');
+        }
+      })
+      .catch((res) => {
+        console.log(res)
+      })
   }
 
   useEffect(() => {
-    tokenCheck();
+    checkToken();
   }, []);
 
   useEffect(() => {
@@ -73,9 +81,14 @@ function App() {
   function onRegister(data) {
     return auth.register(data)
       .then(() => {
-        setIsInfoTooltipOpen(true);
-        setRegMessage(true);
-        history.push('/signin');
+        if(data) {
+          setIsInfoTooltipOpen(true);
+          setRegMessage(true);
+          history.push('/signin');
+        }
+        else{
+          setRegMessage(true);
+        }
       })
       .catch(() => {
         setIsInfoTooltipOpen(true);
@@ -86,9 +99,19 @@ function App() {
   function onLogin(data) {
     return auth.authorize(data)
       .then(({ token }) => {
-        setEmailInfo(data.email)
-        setLoggedIn(true);
-        localStorage.setItem('jwt', token);
+        if ({token}) {
+          setEmailInfo(data.email);
+          setLoggedIn(true);
+          localStorage.setItem('jwt', token);
+        }
+        else {
+          setIsInfoTooltipOpen(true);
+          setRegMessage(true);
+        }
+      })
+      .catch(() => {
+        setIsInfoTooltipOpen(true);
+        setRegMessage(false);
       });
   };
 
@@ -233,7 +256,6 @@ function App() {
         <ImagePopup
           card={selectedCard}
           onClose={closeAllPopups}
-          name="full-size"
         />
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
